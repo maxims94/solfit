@@ -129,7 +129,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
             <div className="absolute flex w-screen h-screen justify-center items-center">
               <div className="rounded-xl border border-slate-300 p-5 bg-white text-slate-800" onClick={onModalClick}>
                 {
-                  modalState.processing ? "Processing..." : modalState.message
+                  modalState.processing ? <div><p>Processing...</p><p className="text-xs">(Click to continue)</p></div> : modalState.message
                 }
               </div>
             </div>
