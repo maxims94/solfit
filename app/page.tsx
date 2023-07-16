@@ -10,6 +10,7 @@ import Image from 'next/image'
 
 import profileIcon from '@/public/profile.svg'
 import checkInIcon from '@/public/check-in.svg'
+import logo from '@/public/logo.png'
 
 export default function Home() {
 
@@ -47,7 +48,7 @@ export default function Home() {
     <main className="relative bg-white h-screen flex flex-col justify-between">
       <div>
       <div className="border-b py-8 px-4">
-        <h1 className="text-2xl mb-2 font-semibold">SolFit</h1>
+        <Image src={logo} alt="logo" width={200} className="mb-6" />
         <p className="text-xl">Hello, <span className="font-semibold">@eiswaffel</span>!</p>
       </div>
 
