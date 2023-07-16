@@ -1,20 +1,20 @@
 import { useState } from 'react'
 
-export default function Profile({ checkInData, onRewardClaimed, subscriptionData, setSubscriptionData }: any) {
+export default function Profile({ checkInData, onRewardClaimed, subscriptionData, setSubscriptionData, setCheckInData }: any) {
 
   // Testing
   //const [modalState, setModalState] = useState<any>({ active: true, processing: true, message: "Success!" });
 
   const [modalState, setModalState] = useState<any>({ active: false, processing: false, message: undefined, onDone: undefined });
-  
-  const [progressAmount, setProgressAmount] = useState<number>(0); 
-  
+
+  const [progressAmount, setProgressAmount] = useState<number>(0);
+
   const onDoneSubscription = () => {
-    setSubscriptionData({active: true, month: "July 2023"})
+    setSubscriptionData({ active: true, month: "July 2023" })
   }
 
   const onSubscribeClick = () => {
-      setModalState({active: true, processing: true, message: <p>You paid <b>$60</b>. Your subscription is active now! \uD83C\uDF89</p>, onDone: onDoneSubscription})
+    setModalState({ active: true, processing: true, message: <p>You paid <b>$60</b>. Your subscription is now active! \uD83C\uDF89</p>, onDone: onDoneSubscription })
   }
 
   const onDoneClaim = () => {
@@ -23,7 +23,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
   }
 
   const onClaimClick = () => {
-      setModalState({active: true, processing: true, message: <p>SolFit paid you <b>$5</b>! Keep going! \uD83C\uDF89</p>, onDone: onDoneClaim})
+    setModalState({ active: true, processing: true, message: <p>SolFit just paid you <b>$5</b>! Keep going! \uD83C\uDF89</p>, onDone: onDoneClaim })
   }
 
   const onModalClick = () => {
@@ -31,10 +31,68 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
       setModalState({ ...modalState, processing: false })
     } else {
       setModalState({ ...modalState, active: false })
-      if(modalState.onDone) {
+      if (modalState.onDone) {
         modalState.onDone()
       }
     }
+  }
+
+
+  const onNextMonth = () => {
+    setSubscriptionData({active: true, month: "August 2023"})
+    setProgressAmount(0)
+    setCheckInData([])
+  }
+
+  const checkInContents: any[] = []
+
+  if (checkInData.length > 0) {
+    let numClaimable = 0
+    
+    console.log(checkInData)
+    
+    for (const [i,checkIn] of checkInData.entries()) {
+
+      console.log(i, checkIn)
+      let state;
+      if (!checkIn.claimed) {
+        if (numClaimable < 4) {
+          state = "claimable"
+          numClaimable += 1
+        } else {
+          state = "unclaimable"
+        }
+      } else {
+        state = "claimed"
+        numClaimable += 1
+      }
+
+      console.log(checkIn.date + String(i))
+      checkInContents.push(
+        <div key={checkIn.date + String(i)} className="flex flex-row justify-between mb-2 items-center">
+          <p>{checkIn.date}</p>
+          <p>{
+            state == "claimed" ?
+              <div className="inline-block rounded-full text-white font-bold bg-[#13EC00] px-4 py-2">+$5</div>
+              //<div className="inline-block rounded-full text-[#05DE00] font-semibold bg-slate-100 px-4 py-2">+$5</div>
+              : state == "claimable" ?
+                <div className="inline-block rounded-full text-white font-bold bg-blue-500 px-4 py-2 cursor hover:bg-red-500 cursor-pointer" onClick={onClaimClick}>
+                  Claim
+                </div>
+                
+                : <p className="font-semibold text-center w-[63px]">—</p>
+          }
+          </p>
+        </div>
+      )
+    }
+    
+    if(checkInData.length > 4) {
+      checkInContents.push(<p key="next-month" className="underline w-full text-sm cursor" onClick={onNextMonth}>Next month</p>)
+    }
+    
+  } else {
+    checkInContents.push(<p key="no-checkin">No check-ins yet!</p>)
   }
 
   return (
@@ -46,7 +104,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
             </div>
 
             <div className="absolute flex w-screen h-screen justify-center items-center">
-              <div className="rounded-lg border p-5 border-box bg-white text-slate-800 text-xl" onClick={onModalClick}>
+              <div className="rounded-xl border border-slate-300 p-5 bg-white text-slate-800" onClick={onModalClick}>
                 {
                   modalState.processing ? "Processing..." : modalState.message
                 }
@@ -75,7 +133,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
 
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">Total:</span>
-                  <span>$55 ($60 - $5)</span>
+                  <span>${60 - progressAmount} ($60 - <span className="text-[#13EC00]">${progressAmount}</span>)</span>
                 </div>
               </div>
             </div>
@@ -95,22 +153,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
               <h1 className="text-2xl mb-2">Your <span className="font-semibold">Check-Ins</span></h1>
               <div className="flex flex-col">
                 {
-                  checkInData.length > 0 ?
-                    checkInData.map((checkIn: any) => {
-                      return (
-                        <div key={checkIn.date} className="flex flex-row justify-between">
-                          <p>{checkIn.date}</p>
-                          <p>{checkIn.claimed ?
-                            "+$5"
-                            :
-                            <div className="inline-block rounded-full text-white font-semibold bg-blue-500 px-4 py-2 cursor hover:bg-red-500 cursor-pointer" onClick={onClaimClick}>
-                              Claim
-                            </div>
-                            }
-                          </p>
-                        </div>
-                      )
-                    }) : "No check-ins yet!"
+                  checkInContents
                 }
               </div>
             </div>

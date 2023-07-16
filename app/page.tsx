@@ -36,7 +36,8 @@ export default function Home() {
   }
   
   return (
-    <main className="relative">
+    <main className="relative bg-white h-screen flex flex-col justify-between">
+      <div>
       <div className="border-b py-4">
         <h1>SolFit</h1>
         <p>Hello, <span className="font-semibold">@eiswaffel</span>!</p>
@@ -44,14 +45,21 @@ export default function Home() {
 
       {
           tabIndex === 0 ?
-            <Profile checkInData={checkInData} onRewardClaimed={onRewardClaimed} subscriptionData={subscriptionData} setSubscriptionData={setSubscriptionData}></Profile>
+            <Profile checkInData={checkInData} onRewardClaimed={onRewardClaimed} subscriptionData={subscriptionData} setSubscriptionData={setSubscriptionData} setCheckInData={setCheckInData}></Profile>
             :
             <CheckIn performCheckIn={performCheckIn}></CheckIn>
       }
-
-      <div className="flex flex-row justify-around py-4">
-        <p onClick={() => setTabIndex(0)}>Profile</p>
-        <p onClick={() => setTabIndex(1)}>Check-In</p>
+      </div>
+      <div className="flex flex-row justify-center py-4 border-t border-slate-300 bg-slate-100">
+        {
+          subscriptionData.active ?
+          <>
+          <p className="mr-[100px]" onClick={() => setTabIndex(0)}>Profile</p>
+          <p onClick={() => setTabIndex(1)}>Check-In</p>
+          </>
+          :
+          <p onClick={() => setTabIndex(0)}>Profile</p>
+        }
       </div>
     </main>
   )
