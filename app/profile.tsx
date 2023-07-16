@@ -1,13 +1,36 @@
 import { useState } from 'react'
 
-export default function Profile({ checkInData, onRewardClaimed, subscriptionData, setSubscriptionData, setCheckInData }: any) {
+import Image from 'next/image'
+
+import progress0 from '@/public/progress_0.svg'
+import progress5 from '@/public/progress_5.svg'
+import progress10 from '@/public/progress_10.svg'
+import progress15 from '@/public/progress_15.svg'
+import progress20 from '@/public/progress_20.svg'
+
+
+const PROGRESS_MESSAGE: any = {
+  0: "Getting started is hardest.",
+  5: "You're doing great!",
+  10: "Keep going!",
+  15: "You're almost there!",
+  20: "You did it! \uD83C\uDF89"
+}
+
+const PROGRESS_IMAGE: any = {
+  0: progress0,
+  5: progress5,
+  10: progress10,
+  15: progress15,
+  20: progress20
+}
+
+export default function Profile({ checkInData, onRewardClaimed, subscriptionData, setSubscriptionData, setCheckInData, progressAmount, setProgressAmount }: any) {
 
   // Testing
   //const [modalState, setModalState] = useState<any>({ active: true, processing: true, message: "Success!" });
 
   const [modalState, setModalState] = useState<any>({ active: false, processing: false, message: undefined, onDone: undefined });
-
-  const [progressAmount, setProgressAmount] = useState<number>(0);
 
   const onDoneSubscription = () => {
     setSubscriptionData({ active: true, month: "July 2023" })
@@ -88,7 +111,7 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
     }
     
     if(checkInData.length > 4) {
-      checkInContents.push(<p key="next-month" className="underline w-full text-sm cursor" onClick={onNextMonth}>Next month</p>)
+      checkInContents.push(<p key="next-month" className="underline w-full text-sm cursor-pointer mt-8" onClick={onNextMonth}>Next month</p>)
     }
     
   } else {
@@ -117,13 +140,16 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
 
       {
         !subscriptionData.active ?
-          <div className="border-b py-4">
-            <p>Become a member for $60 / month!</p>
+
+          <div className="py-8 px-4">
+            <h1 className="text-2xl mb-2"><span className="font-semibold">Subscribe!</span></h1>
+            <p className="text-xl mb-4">Become a member for $60 / month!</p>
             <div className="inline-block rounded-full text-white font-semibold bg-blue-500 px-4 py-2 cursor hover:bg-red-500 cursor-pointer" onClick={onSubscribeClick}>Subscribe</div>
           </div>
+
           :
           <>
-            <div className="border-b py-4 px-4">
+            <div className="border-b py-8 px-4">
               <h1 className="text-2xl mb-2">Your <span className="font-semibold">Subscription</span></h1>
               <div className="flex flex-col">
                 <div className="flex flex-row justify-between my-2">
@@ -133,23 +159,23 @@ export default function Profile({ checkInData, onRewardClaimed, subscriptionData
 
                 <div className="flex flex-row justify-between">
                   <span className="font-semibold">Total:</span>
-                  <span>${60 - progressAmount} ($60 - <span className="text-[#13EC00]">${progressAmount}</span>)</span>
+                  <span><span className="font-semibold">${60 - progressAmount}</span> ($60 - <span className="text-[#13EC00]">${progressAmount}</span>)</span>
                 </div>
               </div>
             </div>
 
-            <div className="border-b py-4 px-4">
-              <h1 className="text-2xl mb-2">Your <span className="font-semibold">Progress</span></h1>
+            <div className="border-b py-8 px-4">
+              <h1 className="text-2xl mb-4">Your <span className="font-semibold">Progress</span></h1>
               <div className="flex flex-col">
-                <p className="text-lg">Keep going!</p>
-                <div className="flex flex-row justify-between">
-                  <p>IMAGE</p>
+                <p className="text-lg mb-4">{PROGRESS_MESSAGE[progressAmount]}</p>
+                <div className="flex flex-row justify-between items-center">
+                  <Image src={PROGRESS_IMAGE[progressAmount]} width={350} alt="progress bar"/>
                   <p>${progressAmount} / $20</p>
                 </div>
               </div>
             </div>
 
-            <div className="border-b py-4 px-4">
+            <div className="py-8 px-4">
               <h1 className="text-2xl mb-2">Your <span className="font-semibold">Check-Ins</span></h1>
               <div className="flex flex-col">
                 {

@@ -16,6 +16,8 @@ export default function Home() {
 
   const [subscriptionData, setSubscriptionData] = useState<any>({active: false, month: undefined}); 
 
+  const [progressAmount, setProgressAmount] = useState<number>(0);
+
   const performCheckIn = (date: string) => {
     console.log(date);
     setCheckInData([...checkInData, {date: date, claimed: false}]);
@@ -38,14 +40,22 @@ export default function Home() {
   return (
     <main className="relative bg-white h-screen flex flex-col justify-between">
       <div>
-      <div className="border-b py-4">
-        <h1>SolFit</h1>
-        <p>Hello, <span className="font-semibold">@eiswaffel</span>!</p>
+      <div className="border-b py-8 px-4">
+        <h1 className="text-2xl mb-2 font-semibold">SolFit</h1>
+        <p className="text-xl">Hello, <span className="font-semibold">@eiswaffel</span>!</p>
       </div>
 
       {
           tabIndex === 0 ?
-            <Profile checkInData={checkInData} onRewardClaimed={onRewardClaimed} subscriptionData={subscriptionData} setSubscriptionData={setSubscriptionData} setCheckInData={setCheckInData}></Profile>
+            <Profile
+              checkInData={checkInData}
+              onRewardClaimed={onRewardClaimed}
+              subscriptionData={subscriptionData}
+              setSubscriptionData={setSubscriptionData}
+              setCheckInData={setCheckInData}
+              progressAmount={progressAmount}
+              setProgressAmount={setProgressAmount}
+            ></Profile>
             :
             <CheckIn performCheckIn={performCheckIn}></CheckIn>
       }
