@@ -5,6 +5,12 @@ import { useEffect, useState, useRef } from 'react'
 import Profile from '@/app/profile'
 import CheckIn from '@/app/checkin'
 
+
+import Image from 'next/image'
+
+import profileIcon from '@/public/profile.svg'
+import checkInIcon from '@/public/check-in.svg'
+
 export default function Home() {
 
   const [tabIndex, setTabIndex] = useState<number>(0);
@@ -64,11 +70,11 @@ export default function Home() {
         {
           subscriptionData.active ?
           <>
-          <p className="mr-[100px]" onClick={() => setTabIndex(0)}>Profile</p>
-          <p onClick={() => setTabIndex(1)}>Check-In</p>
+          <Image src={profileIcon} alt="profile" className="mr-[100px] cursor-pointer" onClick={() => setTabIndex(0)} />
+          <Image src={checkInIcon} alt="check-in" className="cursor-pointer" onClick={() => setTabIndex(1)} />
           </>
           :
-          <p onClick={() => setTabIndex(0)}>Profile</p>
+          <Image src={profileIcon} alt="profile" className="cursor-pointer" onClick={() => setTabIndex(0)} />
         }
       </div>
     </main>
