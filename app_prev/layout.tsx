@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'SolFit - Pump & Earn',
-  description: 'A gym with a built-in incentive to come and train',
+  description: 'An on-chain gym with built-in incentives',
 }
 
 export default function RootLayout({
@@ -16,11 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="gradient1"></div>
-        {children}
-
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

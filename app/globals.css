@@ -4,5 +4,30 @@
 
 
 body {
-    background-color: white
+    background-color: black;
+    position:relative;
+}
+
+.gradient1{
+    position: absolute;
+    background-image: radial-gradient(farthest-side at top left,#580699,transparent 700px),radial-gradient(farthest-corner at top right,#067699,transparent 700px);
+    width:100vw;
+    height:100vh;
+    min-height:900px;
+    z-index:-999;
+}
+
+.gradient2{
+  width:450px;
+  height:50px;
+  background-image: radial-gradient(250px 25px at center, #303030, transparent)
+}
+
+@layer components {
+  .purple-button {
+    @apply text-white rounded-md bg-[#BD00FF] py-2 px-3
+  }
+  .divider {
+    @apply w-full h-[1px] bg-[#E1E1E1]
+  }
 }
