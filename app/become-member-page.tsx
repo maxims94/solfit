@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useEffect, useState, useRef, useCallback } from 'react'
 
 import solfitLogo from '../public/solfit.svg'
-import logoMan from '../public/logo_man.png'
+import logoMan from '../public/man.png'
 
 import create_tx from '@/lib/create_tx'
 

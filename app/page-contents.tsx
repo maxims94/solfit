@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 
-import EnterPage from '@/app/enter-page'
 import ConnectWalletPage from '@/app/connect-wallet-page'
 import BecomeMemberPage from '@/app/become-member-page'
 
@@ -19,8 +18,6 @@ export default function PageContents() {
 
   const { connection } = useConnection();
   const { publicKey, sendTransaction, wallet } = useWallet();
-  
-  const [hasEntered, setHasEntered] = useState<boolean>(false);
 
   const [currentTab, setCurrentTab] = useState<"profile" | "checkin">("profile");
 
@@ -126,10 +123,6 @@ export default function PageContents() {
     }
 
   }, [onConnect, onDisconnect, wallet])
-
-  if (!hasEntered) {
-    return <EnterPage setHasEntered={setHasEntered} />
-  }
 
   if (publicKey === null || wallet === null) {
     return <ConnectWalletPage />
