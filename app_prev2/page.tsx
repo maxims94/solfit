@@ -7,7 +7,7 @@ import WalletContextProvider from '@/components/WalletContextProvider'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 
 import phoneBg from '../public/phone_bg.svg'
-import PageContents from '@/app/PageContents'
+import PageContents from '@/app/page-contents'
 
 export default function Page() {
 
