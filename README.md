@@ -6,6 +6,10 @@ Realized on the Solana blockchain.
 
 Best explanation is [here](https://www.youtube.com/watch?v=PJ1FmzHM_SE)
 
+## Frontend
+
+![Screenshot](/img/screenshot.png)
+
 ## Solana program
 
 ### What is stored on-chain per user?
@@ -43,4 +47,3 @@ Best explanation is [here](https://www.youtube.com/watch?v=PJ1FmzHM_SE)
 * [Fun demo video](https://www.youtube.com/watch?v=PJ1FmzHM_SE)
 * [Live version](https://solfit.vercel.app/)
 * [Slides](https://drive.google.com/file/d/1lyJYxVDKDag30idml863Xg46TMlxzL_3/view)
-* ![Screenshot](/img/screenshot.png)
