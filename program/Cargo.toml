@@ -1,0 +1,18 @@
+[package]
+name = "solfit_program"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+solana-program = "=1.14.22"
+time = "=0.3.19"
+winnow = "=0.4.1"
+borsh = "0.9.3"
+borsh-derive = "0.9.1"
+thiserror = "1.0.44"
+
+[lib]
+name = "solfit_program"
+crate-type = ["cdylib", "lib"]
