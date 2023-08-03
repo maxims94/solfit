@@ -14,7 +14,14 @@ import LoadingPage from '@/app/LoadingPage'
 
 import BecomeMemberPage from '@/app/BecomeMemberPage'
 
+import UserProfile from '@/app/UserProfile'
+import CheckIn from '@/app/CheckIn'
+
 import { useConnection, useWallet, Wallet } from '@solana/wallet-adapter-react';
+
+import createSolFitTx from '@/lib/createSolFitTx'
+
+import { Connection } from '@solana/web3.js'
 
 export default function PageContents() {
 
@@ -22,6 +29,8 @@ export default function PageContents() {
   const { publicKey, sendTransaction, wallet } = useWallet();
 
   const [currentTab, setCurrentTab] = useState<"profile" | "checkin">("profile");
+
+  const [loadingState, setLoadingState] = useState<string | null>(null);
 
   const [notifier, setNotifier] = useState<string | null>(null);
 
@@ -33,6 +42,8 @@ export default function PageContents() {
     try {
 
       console.log("Fetch user data")
+
+      setLoadingState("Loading user data...")
 
       const responseRaw = await fetch(
         "/api/get_user_data",
@@ -50,6 +61,7 @@ export default function PageContents() {
       console.log(response)
       
       setUserData(response)
+      setLoadingState(null)
 
     } catch (error: any) {
       console.log(error)
@@ -59,10 +71,8 @@ export default function PageContents() {
   const onDisconnect = useCallback(() => {
     console.log("Wallet disconnected")
 
-    /*
-    setUserAccount(null)
+    setUserData(null)
     setCurrentTab("profile")
-    */
   }, [])
 
   useEffect(() => {
@@ -79,7 +89,98 @@ export default function PageContents() {
 
   }, [onConnect, onDisconnect, wallet])
 
-  const tabsActive = true;
+  const onBecomeMember = () => {
+    console.log("Become a member")
+
+    setLoadingState("Subscribing...")
+
+    const tx = createSolFitTx(publicKey, 0, connection);
+
+    setUserData(null);
+
+    (async () => {
+
+      try {
+        const sig = await sendTransaction(tx, connection)
+        console.log(sig)
+        console.log("Success")
+        setUserData({member_month: 7, num_avail:4})
+
+        setNotifier(<p>You paid <b>$1.2</b> ($120). You are now a member! \uD83C\uDF89</p>)
+      } catch (err: any) {
+        console.log("Failure")
+        console.log(err)
+      } finally{
+        setLoadingState(null)
+      }
+
+    })();
+
+  }
+
+  const onCheckinSubmit = () => {
+    console.log("Perform Check in")
+
+    setLoadingState("Checking in...")
+
+    const conn = new Connection('https://solana-mainnet.g.alchemy.com/v2/' + process.env.NEXT_PUBLIC_ALCHEMY_API_KEY)
+
+    const tx = createSolFitTx(publicKey, 1, conn);
+
+    (async () => {
+
+      try {
+        const sig = await sendTransaction(tx, conn)
+        console.log(sig)
+        console.log("Success")
+
+        if (userData.num_avail > 0) {
+          setUserData({...userData, num_avail: userData.num_avail-1})
+          setNotifier(<p>Your reward: <b>$0.10</b> ($10)!</p>)
+
+        } else {
+          setUserData({...userData})
+          setNotifier(<p>Checked in! (no reward)</p>)
+        }
+        setCurrentTab("profile")
+      } catch (err: any) {
+        console.log("Failure")
+        console.log(err)
+      } finally{
+        setLoadingState(null)
+      }
+
+    })();
+  }
+
+  const onNextMonth = () => {
+
+    setLoadingState("Subscribe for next month...")
+
+    const tx = createSolFitTx(publicKey, 0, connection);
+
+    setUserData(null);
+
+    (async () => {
+
+      try {
+        const sig = await sendTransaction(tx, connection)
+        console.log(sig)
+        console.log("Success")
+        setUserData({member_month:8, num_avail:4})
+
+        setNotifier(<p>You paid <b>$1.2</b> ($120) for another month! \uD83C\uDF89</p>)
+      } catch (err: any) {
+        console.log("Failure")
+        console.log(err)
+      } finally{
+        setLoadingState(null)
+      }
+
+    })();
+  }
+
+  const tabsActive = userData !== null && userData.member_month !== 0;
 
   return (
     <div className="flex flex-col justify-between h-full relative">
@@ -88,17 +189,25 @@ export default function PageContents() {
         <Image src={solfitLogo} alt="SolFit Logo" className="mt-[40px] mb-[25px]"/>
         <div className="divider"></div>
         {
-          publicKey === null || wallet === null ?
+          (publicKey === null || wallet === null) ?
           <ConnectWalletPage />
           :
           (
-            userData === null ?
-            <LoadingPage msg="Loading user data..." /> :
+            loadingState !== null ?
+            <LoadingPage msg={loadingState} />
+            : 
             (
-              userData.member_month === 0 ?
-              <BecomeMemberPage />
+              userData === null ?
+              <p>No user data</p>
               :
-              <p>is member</p>
+              (
+                userData.member_month === 0 ?
+                <BecomeMemberPage onBecomeMember={onBecomeMember} />
+                :
+                (
+                  currentTab === "profile" ? <UserProfile userData={userData} onNextMonth={onNextMonth}/> : <CheckIn onSubmit={onCheckinSubmit} />
+                )
+              )
             )
           )
         }
@@ -121,7 +230,7 @@ export default function PageContents() {
       {
         notifier !== null ?
             <div className="absolute flex w-full h-full justify-center items-center">
-              <div className="rounded-xl border border-slate-500 p-5 bg-white text-slate-800 cursor-pointer" onClick={() => setNotifier(null)}>
+              <div className="rounded-xl border border-slate-500 p-5 bg-white text-slate-800 cursor-pointer mx-[20px]" onClick={() => setNotifier(null)}>
                 <p>{notifier}</p>
               </div>
             </div>
