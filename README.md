@@ -24,6 +24,7 @@ Best explanation is [here](https://www.youtube.com/watch?v=PJ1FmzHM_SE)
     * Increments `member_month`
     * Resets `num_avail` to `4`
     * The user must transfer $120 USDC to a PDA
+    * [Sample transaction](https://explorer.solana.com/tx/3CHZDQqF4Y3WC5GCRaxc5EgzD1FLMvmc5m6ts8SLMcpsTiQ6Wtr6QyTZP3BzP53dP2Pojnk6J15E2tjbvJRisXxz)
 * `claim_reward`
     * Only valid if `num_avail` is still > 0
     * In that case, it is decremented and $10 are sent back to the user as cashback
@@ -32,6 +33,10 @@ Best explanation is [here](https://www.youtube.com/watch?v=PJ1FmzHM_SE)
     * Sets `member_month` and `num_avail` to `0`, essentially cancelling the membership
     * All of the USDC that is stored in the respective PDA is transferred back to them
 * [Source code of the Solana Program](https://github.com/maxims94/solfit/tree/main/program)
+
+### Deployment
+
+* On mainnet: 7bd3GWaR7h5X6ZAndStp9vD5NbQY5a7V9Q6UMMCm3tCd
 
 ## Links
 
