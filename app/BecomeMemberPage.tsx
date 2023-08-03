@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import logoMan from '../public/man.png'
 
-export default function BecomeMemberPage({onBecomeMember}:{any}) {
+export default function BecomeMemberPage({onBecomeMember}:any) {
   return (
 
     <div className="flex flex-col justify-center items-center w-full h-full">

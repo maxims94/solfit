@@ -21,7 +21,7 @@ import { useConnection, useWallet, Wallet } from '@solana/wallet-adapter-react';
 
 import createSolFitTx from '@/lib/createSolFitTx'
 
-import { Connection } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 
 export default function PageContents() {
 
@@ -32,9 +32,9 @@ export default function PageContents() {
 
   const [loadingState, setLoadingState] = useState<string | null>(null);
 
-  const [notifier, setNotifier] = useState<string | null>(null);
+  const [notifier, setNotifier] = useState<any | null>(null);
 
-  const [userData, setUserData] = useState<null | {member_month: int, num_avail:int}>(null)
+  const [userData, setUserData] = useState<null | {member_month: number, num_avail:number}>(null)
 
   const onConnect = useCallback(async (publicKey: PublicKey) => {
     console.log("Connected:", publicKey.toString())
@@ -66,7 +66,7 @@ export default function PageContents() {
     } catch (error: any) {
       console.log(error)
     }
-  }, [connection])
+  }, [])
 
   const onDisconnect = useCallback(() => {
     console.log("Wallet disconnected")
@@ -94,11 +94,11 @@ export default function PageContents() {
 
     setLoadingState("Subscribing...")
 
-    const tx = createSolFitTx(publicKey, 0, connection);
-
     setUserData(null);
 
     (async () => {
+
+      const tx = await createSolFitTx(publicKey!, 0, connection);
 
       try {
         const sig = await sendTransaction(tx, connection)
@@ -119,27 +119,25 @@ export default function PageContents() {
   }
 
   const onCheckinSubmit = () => {
-    console.log("Perform Check in")
+    console.log("Perform Check in");
 
-    setLoadingState("Checking in...")
-
-    const conn = new Connection('https://solana-mainnet.g.alchemy.com/v2/' + process.env.NEXT_PUBLIC_ALCHEMY_API_KEY)
-
-    const tx = createSolFitTx(publicKey, 1, conn);
+    setLoadingState("Checking in...");
 
     (async () => {
 
+      const tx = await createSolFitTx(publicKey!, 1, connection);
+
       try {
-        const sig = await sendTransaction(tx, conn)
+        const sig = await sendTransaction(tx, connection)
         console.log(sig)
         console.log("Success")
 
-        if (userData.num_avail > 0) {
-          setUserData({...userData, num_avail: userData.num_avail-1})
+        if (userData!.num_avail > 0) {
+          setUserData({member_month: userData!.member_month, num_avail: userData!.num_avail-1})
           setNotifier(<p>Your reward: <b>$0.10</b> ($10)!</p>)
 
         } else {
-          setUserData({...userData})
+          setUserData({member_month: userData!.member_month, num_avail: userData!.num_avail})
           setNotifier(<p>Checked in! (no reward)</p>)
         }
         setCurrentTab("profile")
@@ -155,14 +153,14 @@ export default function PageContents() {
 
   const onNextMonth = () => {
 
-    setLoadingState("Subscribe for next month...")
+    setLoadingState("Subscribe for next month...");
 
-    const tx = createSolFitTx(publicKey, 0, connection);
 
     setUserData(null);
 
     (async () => {
 
+      const tx = await createSolFitTx(publicKey!, 0, connection);
       try {
         const sig = await sendTransaction(tx, connection)
         console.log(sig)

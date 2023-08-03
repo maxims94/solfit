@@ -1,6 +1,6 @@
 "use client"
 
-export default function CheckIn({onSubmit}:{any}) {
+export default function CheckIn({onSubmit}:any) {
   return (
 
     <div className="flex flex-col justify-center items-center w-full h-full">

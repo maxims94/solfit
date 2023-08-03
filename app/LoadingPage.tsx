@@ -1,6 +1,6 @@
 "use client"
 
-export default function LoadingPage({msg}:{string}) {
+export default function LoadingPage({msg}:any) {
   return (
 
     <div className="flex flex-col justify-center items-center w-full h-full">
